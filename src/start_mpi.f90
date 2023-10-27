@@ -354,7 +354,7 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    Open (file_no_grid1, file=Loc_climate_data//nam_lat//'/'//nam_lon//'.dat', &
          access='direct', recl=i, status='old')
       read (file_no_grid1,rec=1) &
-      (((dataREAD(doy,year,dat), dat=1,10), doy=1,365), year=1, YearMaxClimate)
+      (((dataREAD(doy,year,dat), dat=1,7), doy=1,365), year=1, YearMaxClimate)
    Close(file_no_grid1)
    
 !_____________ 読んだ気象データを整理する
