@@ -12,16 +12,17 @@ PROGRAM omp_kickoff
   character(len=*),parameter::Loc_spnin_files='/work/G10203/hsato/spnin/' 
 
 !Specify a file for atmospheric CO2 input
-   character(len=*),parameter::Loc_CO2_files='co2_1850_2100_rcp85.dat'
+   character(len=*),parameter::Loc_CO2_files='co2_holocene.dat'
 
 !Directory of climate data for histrical reconstruction
-   character(len=*),parameter::Loc_climate_data='/work/G10203/hsato/climate_historical_daily_0.5deg_V5/'
+   character(len=*),parameter::Loc_climate_data='/home/acclimate/ibertrix/code_mpi/SEIB-initial/Climate_Data_Siberia/new_data/INPUTSEIB_NEW_6k/'
 
 !Set year number of climate data
-   integer,parameter::YearMaxClimate =  115 !historical(Year of 1901-2015)
-   
+   integer,parameter::YearMaxClimate =  37 !historical(Year of 1901-2015)
+   integer,parameter::YearMaxCO2      = 300  !Year length of the CO2 data (1850-2100)
+ 
 !Land mask file
-   character(len=*),parameter::Fn_landmask = 'landmask_0.5deg_Hokkaido.txt'
+   character(len=*),parameter::Fn_landmask = 'landmask_0.25deg.txt'
    
 !Directory for writing an output file of each simulation grid
    character(len=*),parameter::Loc_result_files = './result/'
@@ -35,15 +36,16 @@ PROGRAM omp_kickoff
    character(len=*),parameter::Fn_landprop = 'land_prop.txt'
    
 !Maximum grid number for longitude and latitude
-  integer,parameter::LatMax = 360 !Grid number for latitude  (@ 0.5deg Grid System)
-  integer,parameter::LonMax = 720 !Grid number for longitude (@ 0.5deg Grid System)
+  integer,parameter::LatMax = 720 !Grid number for latitude  (@ 0.5deg Grid System)
+  integer,parameter::LonMax = 1440 !Grid number for longitude (@ 0.5deg Grid System)
    
 !Grid length for simulation
 !Hokkaido region (Japan)
-   integer,parameter::LatNoStart =  90	!
-   integer,parameter::LatNoEnd   =  98	!
-   integer,parameter::LonNoStart = 639	!
-   integer,parameter::LonNoEnd   = 651	!
+!iab changed for Europe
+   integer,parameter::LatNoStart =  73	!
+   integer,parameter::LatNoEnd   = 228	!
+   integer,parameter::LonNoStart = 665	!
+   integer,parameter::LonNoEnd   = 920	!
   
 !_____________ Set Variables
    !MPI control variables
@@ -69,8 +71,11 @@ PROGRAM omp_kickoff
    integer,dimension(360*180)::SoilClass    !Soil Class (0~9)
    
    !Atomospheric CO2 time-series @ ppm
-   real,dimension(251)::aco2_1850to2100
-   
+   real,dimension(300)::aco2_1850to2100
+   integer,parameter::startyear = 6150
+   integer,parameter::co2start = 12000 - startyear
+   integer,parameter::co2stop = co2start + YearMaxCO2 - 1
+
    !General usage
    integer i
    real    x, y
@@ -141,8 +146,8 @@ PROGRAM omp_kickoff
    do lonNo=1, LonMax
       if (.not. landmask(lonNo,latNo)) cycle
       
-      lat   =    90.0 - (real(latNo)-0.5) * 0.5
-      lon   = - 180.0 + (real(lonNo)-0.5) * 0.5
+      lat   =    90.0 - (real(latNo)-0.5) * 0.25
+      lon   = - 180.0 + (real(lonNo)-0.5) * 0.25
       point = (90-int(lat)-1)*360 + int(lon+180) + 1 !grid point number @1.0 deg system
       
       if (SoilClass(point)==0) landmask(lonNo,latNo)=.false.
@@ -152,7 +157,7 @@ PROGRAM omp_kickoff
    
 !______________ Read time-series of atmospheric CO2 concentration
    Open (1, file=trim(Loc_CO2_files), status='OLD')
-   do i = 1, 251 !1850~2100
+   do i = 1, 300 !1850~2100
       read(1, *) aco2_1850to2100(i)
    end do
    Close (1)
@@ -227,7 +232,7 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    real               ,intent(IN):: CTI
    character(len=*)   ,intent(IN):: Loc_climate_data
    character(len=*)   ,intent(IN):: Loc_result_files, Loc_spnin_files
-   real,dimension(251),intent(IN)::aco2_1850to2100 !Atomospheric co2 concentration (ppm)
+   real,dimension(300),intent(IN)::aco2_1850to2100 !Atomospheric co2 concentration (ppm)
    
 !_____________ Set Variables
 !Climate data
@@ -288,8 +293,8 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
 !Reference number for location
    ! LAT: north +, south - (decimalized)
    ! LON: east  +, west  - (decimalized)
-   LAT   =    90.0 - (real(latNo)-0.5) * 0.5
-   LON   = - 180.0 + (real(lonNo)-0.5) * 0.5
+   LAT   =    90.0 - (real(latNo)-0.5) * 0.25
+   LON   = - 180.0 + (real(lonNo)-0.5) * 0.25
    point = (90-int(lat)-1)*360 + int(lon+180) + 1 !grid point number @1.0 deg system
    
 !Characters for designating latitude and longitude
@@ -345,7 +350,7 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    allocate (tmp_soil      (Day_in_Year, YearMaxClimate, NumSoil) )
    
    !Read climate data, 1850~2005
-   i = 10 * 365 * YearMaxClimate * 4 !データサイズ * 4byte
+   i = 7 * 365 * YearMaxClimate * 4 !データサイズ * 4byte
    Open (file_no_grid1, file=Loc_climate_data//nam_lat//'/'//nam_lon//'.dat', &
          access='direct', recl=i, status='old')
       read (file_no_grid1,rec=1) &
