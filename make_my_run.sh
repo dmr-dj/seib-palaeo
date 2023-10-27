@@ -104,6 +104,8 @@ mkdir -p wkdir/${namerun}
 cp -p src/* wkdir/${namerun}/.
 cp -p parameters/* wkdir/${namerun}/.
 cp -p config/Makefile wkdir/${namerun}/.
+mkdir wkdir/${namerun}/result_tmp
+mkdir wkdir/${namerun}/result_visualize
 
 msg "${GREEN}Finalized setup in wkdir/${namerun}${NOFORMAT}"
 

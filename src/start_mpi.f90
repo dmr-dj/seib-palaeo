@@ -25,7 +25,7 @@ PROGRAM omp_kickoff
    character(len=*),parameter::Fn_landmask = 'landmask_0.25deg.txt'
    
 !Directory for writing an output file of each simulation grid
-   character(len=*),parameter::Loc_result_files = './result/'
+   character(len=*),parameter::Loc_result_files = './result_tmp/'
    
 !Directory for writing analysis data for whole simulation grid
    character(len=*),parameter::Loc_analysis_files= './result_visualize/'
