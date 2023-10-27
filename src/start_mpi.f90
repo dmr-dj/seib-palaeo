@@ -106,34 +106,34 @@ PROGRAM omp_kickoff
 ! 元データ所在　C:\Users\hsato\Dropbox\Data\Forcingデータ\ISLSCP II HYDRO1k Elevation-derived Products(hydro1k_elevation_hdeg)
 !The slope is expressed in degrees of slope between 0 and 90.
    SlopeMean(:,:) = 0.0
-   open (1, file="hydro1k_slope_mean_hd.csv", status='OLD')
-   do latNo=1, LatMax
-      read(1,*) readerLonMaxReal(1:LonMax)
-      do lonNo=1, LonMax
-         SlopeMean(lonNo,latNo) = readerLonMaxReal(lonNo)
-      end do
-   end do
-   close(1)
+   !open (1, file="hydro1k_slope_mean_hd.csv", status='OLD')
+   !do latNo=1, LatMax
+    !  read(1,*) readerLonMaxReal(1:LonMax)
+     ! do lonNo=1, LonMax
+      !   SlopeMean(lonNo,latNo) = readerLonMaxReal(lonNo)
+      !end do
+   !end do
+   !close(1)
    
 !Read CTI (Compound Topographic Index)
 ! Marthew et al.(2015). HYDRO1k CTI 
 ! Personal memo: D:\Data\CTI(composite topographic index) converted by ga2_conv_phase3.2.f90
    CTI (:,:) = 0.0 !CTI
-   open (1, file="CTI_0.5deg.csv", status='OLD')
-   do latNo=1, LatMax
-      read(1,*) readerLonMaxReal(1:LonMax)
-      do lonNo=1, LonMax
-         CTI(lonNo,latNo) = readerLonMaxReal(lonNo)
-      end do
-   end do
-   close(1)
+   !open (1, file="CTI_0.5deg.csv", status='OLD')
+   !do latNo=1, LatMax
+    !  read(1,*) readerLonMaxReal(1:LonMax)
+     ! do lonNo=1, LonMax
+     !    CTI(lonNo,latNo) = readerLonMaxReal(lonNo)
+     ! end do
+   !end do
+   !close(1)
    
 !Soil Class
-   open (1, file='SoilZobler.txt', status='OLD')
-   do i=1, 360*180
-      read(1,*) SoilClass(i)
-   end do
-   close(1)
+  ! open (1, file='SoilZobler.txt', status='OLD')
+  ! do i=1, 360*180
+   !   read(1,*) SoilClass(i)
+   !end do
+   !close(1)
    
 !Landmask correction
 !Note: This procedure can be abundant if land data sets are unified in the future
@@ -316,18 +316,18 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
 !______________ Read Location data
    open (file_no_grid1, file='land_prop.txt', status='OLD')
    do i=1, point
-      read(file_no_grid1,*) Mask, ALT, Albedo_soil0, W_sat, W_fi, W_mat, W_wilt
+      read(file_no_grid1,*) Mask, ALT, Albedo_soil0, W_sat, W_fi, W_mat, W_wilt, SoilClass
    end do
    close(file_no_grid1)
    if (W_fi   > W_sat ) W_fi   = W_sat
    if (W_wilt > W_sat ) W_wilt = W_sat
    
    !Soil Class 
-   open (file_no_grid1, file='SoilZobler.txt', status='OLD')
-   do i=1, point
-      read(file_no_grid1,*) SoilClass
-   end do
-   close(file_no_grid1)
+  ! open (file_no_grid1, file='SoilZobler.txt', status='OLD')
+   !do i=1, point
+    !  read(file_no_grid1,*) SoilClass
+   !end do
+   !close(file_no_grid1)
    
 !_____________ Prepare Climate Data
 !Set sizes of allocatable climate data table
