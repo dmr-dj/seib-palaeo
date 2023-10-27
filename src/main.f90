@@ -56,7 +56,7 @@ SUBROUTINE main_loop ( &
    SLDPTH = (/0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, &
               0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100, 0.100 /) 
    
-!    INTEGER,parameter:: SLOPETYP = 1   !Slope type index 1-9 (default = 1)
+    INTEGER,parameter:: SLOPETYP = 1   !Slope type index 1-9 (default = 1)
 !    INTEGER,parameter:: SLOPETYP = 9   !ÅöäÓíÍó¨èoÇãNÇ±Ç≥ÇπÇ»Ç¢èÍçáÇ…Activate
 !
 ! 1	       0-8
@@ -299,7 +299,7 @@ SUBROUTINE main_loop ( &
 
    
 !Slope type, which controls soil hydrological properties
-   INTEGER SLOPETYP
+!   INTEGER SLOPETYP
    
    ![Option] For Hokkaido simulation
    !SLOPETYP = 20 + int(min(1.0, SlopeMean/30.)*10)
@@ -390,8 +390,8 @@ END IF
    year         = 1
    
 ![Option]Set head of the climate data
-  year_climate = 81  !Start from 1981
-! year_climate = 1  !Start from 1901
+!  year_climate = 81  !Start from 1981
+ year_climate = 1  !Start from 1901
    
    if (Flag_spinup_read) then
       counter_begin = 1 + Spinup_year*Day_in_Year

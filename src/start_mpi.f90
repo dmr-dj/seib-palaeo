@@ -132,14 +132,14 @@ PROGRAM omp_kickoff
      ! end do
    !end do
    !close(1)
-   
+
 !Soil Class
-  ! open (1, file='SoilZobler.txt', status='OLD')
-  ! do i=1, 360*180
-   !   read(1,*) SoilClass(i)
-   !end do
-   !close(1)
-   
+   open (1, file='SoilZobler.txt', status='OLD')
+   do i=1, 360*180
+      read(1,*) SoilClass(i)
+   end do
+   close(1)
+
 !Landmask correction
 !Note: This procedure can be abundant if land data sets are unified in the future
    do latNo=1, LatMax
@@ -321,19 +321,19 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
 !______________ Read Location data
    open (file_no_grid1, file='land_prop.txt', status='OLD')
    do i=1, point
-      read(file_no_grid1,*) Mask, ALT, Albedo_soil0, W_sat, W_fi, W_mat, W_wilt, SoilClass
+      read(file_no_grid1,*) Mask, ALT, Albedo_soil0, W_sat, W_fi, W_mat, W_wilt
    end do
    close(file_no_grid1)
    if (W_fi   > W_sat ) W_fi   = W_sat
    if (W_wilt > W_sat ) W_wilt = W_sat
-   
-   !Soil Class 
-  ! open (file_no_grid1, file='SoilZobler.txt', status='OLD')
-   !do i=1, point
-    !  read(file_no_grid1,*) SoilClass
-   !end do
-   !close(file_no_grid1)
-   
+
+   !Soil Class
+   open (file_no_grid1, file='SoilZobler.txt', status='OLD')
+   do i=1, point
+      read(file_no_grid1,*) SoilClass
+   end do
+   close(file_no_grid1)
+
 !_____________ Prepare Climate Data
 !Set sizes of allocatable climate data table
    allocate (tmp_air       (Day_in_Year, YearMaxClimate)          )
