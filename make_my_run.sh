@@ -104,6 +104,7 @@ mkdir -p wkdir/${namerun}
 cp -p src/* wkdir/${namerun}/.
 cp -p parameters/* wkdir/${namerun}/.
 cp -p config/Makefile wkdir/${namerun}/.
+cp -pr visualizer/ wkdir/${namerun}/.
 mkdir wkdir/${namerun}/result_tmp
 mkdir wkdir/${namerun}/result_visualize
 
