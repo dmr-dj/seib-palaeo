@@ -107,7 +107,9 @@ cp -p config/Makefile wkdir/${namerun}/.
 cp -pr visualizer/ wkdir/${namerun}/.
 mkdir wkdir/${namerun}/result_tmp
 mkdir wkdir/${namerun}/result_visualize
+cp -p SEIBertrix.job wkdir/${namerun}/.
 
 msg "${GREEN}Finalized setup in wkdir/${namerun}${NOFORMAT}"
 
 # The End of All Things (op. cit.)
+
