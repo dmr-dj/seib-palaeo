@@ -63,10 +63,12 @@ parse_params() {
   # default values of variables set from params
   outpdataDIR=''
   basedataDIR=''
-  
+  nb_years=50
+  namerun='DEFAULTSIMU' 
+ 
   args=("$@")
   
-  [[ ${#args[@]} -lt 1 ]] && die "Missing script arguments: at the minimum I need the label of the run to setup"
+ # [[ ${#args[@]} -lt 1 ]] && die "Missing script arguments: at the minimum I need the label of the run to setup"
 
   while :; do
     case "${1-}" in
@@ -76,7 +78,11 @@ parse_params() {
 #    -o | --outputdir) 
 #      outpdataDIR="${2-}"
 #      shift
-#      ;;    
+#      ;; 
+    -n | --nbyears)
+      nb_years="${2-}"
+      shift
+      ;;   
     -l | --label)
       namerun="${2-}"
       shift
@@ -103,6 +109,7 @@ setup_colors
 mkdir -p wkdir/${namerun}
 cp -p src/* wkdir/${namerun}/.
 cp -p parameters/* wkdir/${namerun}/.
+sed -e "s%THE_NUMBER_OF_YEARS_TO_RUN%${nb_years}%g" parameters/parameter.txt > wkdir/${namerun}/parameter.txt
 cp -p config/Makefile wkdir/${namerun}/.
 cp -pr visualizer/ wkdir/${namerun}/.
 mkdir wkdir/${namerun}/result_tmp
