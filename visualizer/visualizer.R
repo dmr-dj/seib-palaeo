@@ -8,7 +8,7 @@
 #____________________ Common procedure ____________________ 
 #Set environment
    #Working directory
-   setwd('./result_visualize/') 
+   setwd('./../result_visualize/') 
    
    #Missing value
    Missing  =  0

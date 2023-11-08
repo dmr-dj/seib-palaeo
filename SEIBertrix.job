@@ -3,7 +3,7 @@
 # Specify the job's name (<= 15 letters)
 #PBS -N medSEIB3.1
 # Specify batch queue
-#PBS -q mediump
+#PBS -q xlongp
 # Reserve 1 node with 4 cores
 #PBS -l nodes=1:ppn=16
 # Request that stdin and stdout are merged in the same output file
