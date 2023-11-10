@@ -11,19 +11,19 @@
    setwd('./../result_visualize/') 
    
    #Missing value
-   Missing  =  0
+   Missing  =  -1
    
    #Grid size (length on a side @ deg)
-   GridSize   = 0.5
+   GridSize   = 0.25
    
    #Pixel size of a grid
    PixSize   = 5.0
    
    #Visualizing area (designated by grid numbers)
-   LatNoStart = 90
-   LatNoEnd   = 98
-   LonNoStart = 639
-   LonNoEnd   = 651
+   LatNoStart = 73
+   LatNoEnd   = 228
+   LonNoStart = 665
+   LonNoEnd   = 920
    
 #Compute valiables for coodination and image size
    
@@ -36,8 +36,8 @@
    height_size = Lat * PixSize
    
    #Latitude and longitude at the center of grid of the most south-west grid cell
-   Lat1_loc =    90.0 - (LatNoEnd   - 0.5) * 0.5 #(North:+ , Sourth:-)
-   Lon1_loc = - 180.0 + (LonNoStart - 0.5) * 0.5 #(West :- , East  :+)
+   Lat1_loc =    90.0 - (LatNoEnd   - 0.5) * GridSize #(North:+ , Sourth:-)
+   Lon1_loc = - 180.0 + (LonNoStart - 0.5) * GridSize #(West :- , East  :+)
    
    #Latitude coordinate
    y <- array(0.0, dim=c(Lat))                          #Prepare array y
@@ -186,40 +186,41 @@ draw_dist_LAI <- function(DivedNum,PannelStep,col,x,y,z) {
    #色の設定を行う
    col <- set_color_topo(DivedNum) 
    col[ 0] <- "white"         # 0: - water -
-   col[ 1] <- "white"         # 1: Polar desert
-   col[ 2] <- "violet"        # 2: Arctic/Alpine-tundra
+   col[ 1] <- "lightblue"     # 1: Polar desert
+   col[ 2] <- "lightskyblue"  # 2: Arctic/Alpine-tundra
    col[ 3] <- "red"           # 3: Tropical evergreen forest
-   col[ 4] <- "darksalmon"    # 4: Tropical deciduous forest
-   col[ 5] <- "orange"        # 5: Temperate conifer forest
-   col[ 6] <- "aquamarine"    # 6: Temperate broad-leaved evergreen forest
-   col[ 7] <- "aquamarine2"   # 7: Temperate deciduous forest
+   col[ 4] <- "purple"        # 4: Tropical deciduous forest
+   col[ 5] <- "yellowgreen"   # 5: Temperate conifer forest
+   col[ 6] <- "yellow4"       # 6: Temperate broad-leaved evergreen forest
+   col[ 7] <- "limegreen"     # 7: Temperate deciduous forest
    col[ 8] <- "aquamarine4"   # 8: Boreal evergreen forest
    col[ 9] <- "steelblue1"    # 9: Boreal deciduous forest
    col[10] <- "steelblue4"    #10: Xeric woodland / scrub
    col[11] <- "bisque"        #11: Grassland / steppe / Savanna
-   col[12] <- "bisque3"       #12: Desert
+   col[12] <- "orange"       #12: Desert
    
+
    png('out_biome.png', width=width_size, height=height_size) #デバイスドライバ開く
    draw_dist (DivedNum, PannelStep, col, x, y, z)             #図本体の描画
    
-#   #凡例の描画 ______
-#   x_start <-   114
-#   x_width <-    5
-#   y_start <-   84 #余白を含む
-#   y_width <-    4
-#   
-#   # 枠外への描画を許可
-#   par(xpd=T)
-#   
-#   #Write label on top of the color pannel
-#   text(x_start, y_start+2, pos=4, "Biome Type")
-#   
-#   #Draw color pannel
-#   for (j in 1:DivedNum) {
-#      polygon( c(x_start, x_start+x_width, x_start+x_width, x_start), c(y_start, y_start, y_start-y_width, y_start-y_width), col=col[j])
-#      text(x_start+0.5*x_width, y_start-y_width*0.7, pos=1, j)
-#      x_start <- x_start+x_width
-#   }
+   #凡例の描画 ______
+   x_start <-   -13
+   x_width <-    2
+   y_start <-   73 #余白を含む
+   y_width <-    2
+   
+   # 枠外への描画を許可
+   par(xpd=T)
+   
+   #Write label on top of the color pannel
+   text(x_start, y_start+2, pos=4, "Biome Type")
+   
+   #Draw color pannel
+   for (j in 1:DivedNum) {
+      polygon( c(x_start, x_start+x_width, x_start+x_width, x_start), c(y_start, y_start, y_start-y_width, y_start-y_width), col=col[j])
+      text(x_start+0.5*x_width, y_start-y_width*0.7, pos=1, j)
+      x_start <- x_start+x_width
+   }
    
    #デバイスドライバ閉じる ______
    dev.off()
