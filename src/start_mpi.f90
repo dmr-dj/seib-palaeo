@@ -361,19 +361,23 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    do year=1,YearMaxClimate
    do doy=1,Day_in_Year
       tmp_air      (doy,year) = dataREAD(doy,year, 1)
+      ![DMR] temporary, we do not have soil temperatures in the forcing yet
+      tmp_soil     (doy,year,:) = dataREAD(doy,year,1) !substitute air-temp.
       tmp_air_range(doy,year) = dataREAD(doy,year, 2)
       prec         (doy,year) = dataREAD(doy,year, 3)
       rad_short    (doy,year) = dataREAD(doy,year, 4)
       rad_long     (doy,year) = dataREAD(doy,year, 5)
       wind         (doy,year) = dataREAD(doy,year, 6)
       r_humid      (doy,year) = dataREAD(doy,year, 7)
-      tmp_soil1    (doy,year) = dataREAD(doy,year, 8)
-      tmp_soil2    (doy,year) = dataREAD(doy,year, 9)
-      tmp_soil3    (doy,year) = dataREAD(doy,year,10)
+      ![DMR] temporary, we do not have those variables in the forcing yet
+!      tmp_soil1    (doy,year) = dataREAD(doy,year, 8)
+!      tmp_soil2    (doy,year) = dataREAD(doy,year, 9)
+!      tmp_soil3    (doy,year) = dataREAD(doy,year,10)
       
-      !Give adhock values for soil temperature
-      Call tmp_soil_interpolate &
-           (tmp_soil1(doy,year), tmp_soil2(doy,year), tmp_soil3(doy,year), tmp_soil(doy,year,:))
+      ![DMR] following removed temporarily
+!      !Give adhock values for soil temperature
+!      Call tmp_soil_interpolate &
+!           (tmp_soil1(doy,year), tmp_soil2(doy,year), tmp_soil3(doy,year), tmp_soil(doy,year,:))
       
    enddo
    enddo
