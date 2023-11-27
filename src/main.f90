@@ -418,7 +418,7 @@ DO counter = counter_begin, counter_end
       if (year_climate==YearMaxClimate+1) year_climate=1
       
 !      !Repeat years of 1981-1990
-       if (year_climate==91) year_climate=81
+!       if (year_climate==91) year_climate=81
        
 !      !Repeat years of 1901-1910
 !      if (year_climate==11) year_climate=1
@@ -1182,7 +1182,7 @@ SUBROUTINE climate_convert ( &
    Do TimeStep = 1, TimeStepMax
       
       !vp_sat_: saturated vapour pressure for each time step (hPa)
-      vp_sat = Sat_vp (AirTmp_30min(TimeStep))
+      vp_sat_ = Sat_vp (AirTmp_30min(TimeStep))
       
       if (vp_sat_<0.01) then
          RH_30min (TimeStep) = 0.0
