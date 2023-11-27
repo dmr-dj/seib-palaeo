@@ -15,7 +15,8 @@ PROGRAM omp_kickoff
    character(len=*),parameter::Loc_CO2_files='co2_holocene.dat'
 
 !Directory of climate data for histrical reconstruction
-   character(len=*),parameter::Loc_climate_data='/home/acclimate/ibertrix/code_mpi/SEIB-initial/Climate_Data_Siberia/new_data/INPUTSEIB_NEW_6k/'
+   character(len=*),parameter::Loc_climate_data= &
+   '/home/acclimate/ibertrix/code_mpi/SEIB-initial/Climate_Data_Siberia/new_data/INPUTSEIB_NEW_6k/'
 
 !Set year number of climate data
    integer,parameter::YearMaxClimate =  37 !historical(Year of 1901-2015)
@@ -71,7 +72,7 @@ PROGRAM omp_kickoff
    integer,dimension(360*180)::SoilClass    !Soil Class (0~9)
    
    !Atomospheric CO2 time-series @ ppm
-   real,dimension(300)::aco2_1850to2100
+   real,dimension(YearMaxCO2)::aco2_1850to2100
    integer,parameter::startyear = 6150
    integer,parameter::co2start = 12000 - startyear
    integer,parameter::co2stop = co2start + YearMaxCO2 - 1
@@ -149,7 +150,7 @@ PROGRAM omp_kickoff
       lat   =    90.0 - (real(latNo)-0.5) * 0.25
       lon   = - 180.0 + (real(lonNo)-0.5) * 0.25
       point = (90-int(lat)-1)*360 + int(lon+180) + 1 !grid point number @1.0 deg system
-      
+
       if (SoilClass(point)==0) landmask(lonNo,latNo)=.false.
       if (SoilClass(point)==9) landmask(lonNo,latNo)=.false.
    end do
@@ -157,8 +158,11 @@ PROGRAM omp_kickoff
    
 !______________ Read time-series of atmospheric CO2 concentration
    Open (1, file=trim(Loc_CO2_files), status='OLD')
-   do i = 1, 300 !1850~2100
-      read(1, *) aco2_1850to2100(i)
+   do i = 1, co2start-1
+        read(1, *) aco2_1850to2100(1)
+   end do
+   do i = co2start, co2stop !1850~2100
+      read(1, *) aco2_1850to2100(i-co2start+1)
    end do
    Close (1)
    
@@ -191,7 +195,7 @@ PROGRAM omp_kickoff
    if ( myid == mod(gridNo-1, numprocs) ) then
       Call start(myid, latNo_save(gridNo), lonNo_save(gridNo), &
                  SlopeMean_save(gridNo), CTI_save(gridNo), &
-                 aco2_1850to2100, YearMaxClimate, &
+                 aco2_1850to2100, YearMaxClimate, YearMaxCO2, &
                  Loc_climate_data, Loc_result_files, Loc_spnin_files)
    endif
    END DO
@@ -219,7 +223,7 @@ END PROGRAM omp_kickoff
 ! Start up procedure for each simulation grid
 !*************************************************************************************************
 Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
-                  aco2_1850to2100, YearMaxClimate, &
+                  aco2_1850to2100, YearMaxClimate, YearMaxCO2,&
                   Loc_climate_data, &
                   Loc_result_files, Loc_spnin_files)
    
@@ -227,12 +231,12 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    implicit none
    
 !_____________ Set Augment
-   integer            ,intent(IN):: myid, latNo, lonNo, YearMaxClimate
+   integer            ,intent(IN):: myid, latNo, lonNo, YearMaxClimate, YearMaxCO2
    real               ,intent(IN):: SlopeMean
    real               ,intent(IN):: CTI
    character(len=*)   ,intent(IN):: Loc_climate_data
    character(len=*)   ,intent(IN):: Loc_result_files, Loc_spnin_files
-   real,dimension(300),intent(IN)::aco2_1850to2100 !Atomospheric co2 concentration (ppm)
+   real,dimension(YearMaxCO2),intent(IN):: aco2_1850to2100 !Atomospheric co2 concentration (ppm)
    
 !_____________ Set Variables
 !Climate data
@@ -455,7 +459,7 @@ Subroutine start (myid, latNo, lonNo, SlopeMean, CTI, &
    CTI_dif = 0.0
    
    Call main_loop ( &
-   LAT, LON, GlobalZone, SlopeMean, YearMaxClimate, &
+   LAT, LON, GlobalZone, SlopeMean, YearMaxClimate, YearMaxCO2, &
    file_no_grid1, file_no_grid2, file_no_grid3, &
    tmp_air(:,:), tmp_air_range(:,:), prec(:,:), rad_short(:,:), rad_long(:,:), &
    wind(:,:), r_humid(:,:), tmp_soil(:,:,:), &

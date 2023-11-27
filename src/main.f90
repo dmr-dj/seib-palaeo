@@ -21,7 +21,7 @@
 ! MAIN SIMULATION LOOP
 !*************************************************************************************************
 SUBROUTINE main_loop ( &
-           LAT, LON, GlobalZone, SlopeMean, YearMaxClimate, &
+           LAT, LON, GlobalZone, SlopeMean, YearMaxClimate, YearMaxCO2, &
            file_no_grid1, file_no_grid2, file_no_grid3, &
            tmp_air, tmp_air_range, prec, rad_short, rad_long, wind, rh, tmp_soil, &
            aco2_1850to2100, ALT, Albedo_soil0, W_fi, W_wilt, W_sat, W_mat, SoilClass, CTI_dif)
@@ -95,7 +95,7 @@ SUBROUTINE main_loop ( &
    real   ,intent(IN):: SlopeMean
    
 !Length of Inputted Climate Data (yr)
-   integer,intent(IN):: YearMaxClimate
+   integer,intent(IN):: YearMaxClimate, YearMaxCO2
    
 !For I/O reference number for this grid cell
    integer,intent(IN):: file_no_grid1, file_no_grid2, file_no_grid3
@@ -115,7 +115,7 @@ SUBROUTINE main_loop ( &
    
 !Atomospheric CO2 time-series @ ppm
 !(1850~2000 from historical record, +2001~2100 from RCP8.5 scenario)
-   real,dimension(251),intent(IN)::aco2_1850to2100 !Atomospheric co2 concentration (ppm)
+   real,dimension(YearMaxCO2),intent(IN)::aco2_1850to2100 !Atomospheric co2 concentration (ppm)
    
 !Location data
    real:: &
@@ -515,7 +515,8 @@ stat_water(p) = min(1.0, max(0.0, stat_water(p)))
 !_____________ DAILY PSYSICAL PROCESSES
 ![OPTION] Set year of atmospheric CO2 concentration
 !co2atm = aco2_1850to2100(year_climate+51) !Progress 1901~
- co2atm = aco2_1850to2100(141)          !Fixed at 1990 (for Fixed CO2 experiment)
+! co2atm = aco2_1850to2100(141)          !Fixed at 1990 (for Fixed CO2 experiment)
+ co2atm = aco2_1850to2100(min(year_climate,UBOUND(aco2_1850to2100,DIM=1)))
 !co2atm = aco2_1850to2100(51)           !Fixed at 1901 (for Fixed CO2 experiment)
    
    !Calculate variables in relation to atmospheric physics (e.g. Air pressure, Vapor density)
