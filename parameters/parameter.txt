@@ -1,1 +1,1 @@
-parameter-orig.txt
+parameter-NoTropics.txt
