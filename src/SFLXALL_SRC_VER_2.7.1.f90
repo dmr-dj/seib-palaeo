@@ -1359,7 +1359,7 @@ if (FF > 1.d20) FF=0.0
 ! APPLY PHYSICAL BOUNDS TO FLERCHINGER SOLUTION
 ! ----------------------------------------------------------------------
         IF (KCOUNT .EQ. 0) THEN
-          Print*,'Flerchinger used in NEW version. Iterations=',NLOG
+          !Print*,'Flerchinger used in NEW version. Iterations=',NLOG
  	  FK = (((HLICE/(GS*(-PSIS)))* &
            ((TKELV-T0)/TKELV))**(-1/BX))*SMCMAX
  	  IF (FK < 0.02) FK = 0.02
